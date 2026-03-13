@@ -1,25 +1,15 @@
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Check if the app is running in 'standalone' mode (installed PWA)
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    <!-- Link to your CSS file if you have one -->
+    <link rel="stylesheet" href="css/style.css"> 
+</head>
+<body>
+    <h1>Hello World!</h1>
 
-    if (isPWA) {
-      const screenWidth = window.screen.availWidth;
-      const screenHeight = window.screen.availHeight;
-
-      // Define your ratios (e.g., 60% width, 80% height)
-      const wRatio = 0.6;
-      const hRatio = 0.8;
-      
-      const newWidth = screenWidth * wRatio;
-      const newHeight = screenHeight * hRatio;
-
-      // Center it based on the new size
-      const newX = (screenWidth - newWidth) / 2;
-      const newY = (screenHeight - newHeight) / 2;
-
-      window.resizeTo(newWidth, newHeight);
-      window.moveTo(newX, newY);
-    }
-  });
-</script>
+    <!-- Link to your external JavaScript file -->
+    <script src="js/app.js" defer></script> 
+</body>
+</html>
