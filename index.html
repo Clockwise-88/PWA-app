@@ -2,14 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Page</title>
-    <!-- Link to your CSS file if you have one -->
-    <link rel="stylesheet" href="css/style.css"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #pip-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #222; /* Darker theme for the PiP window */
+            color: white;
+            text-align: center;
+        }
+        #music-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
+    <h1>Music Now Playing</h1>
+    <p>Interaction Required for this to work</p>
+    <button id="open-pip-button">Open "Now playing" Window</button>
+    
+    <!-- This container will be moved to the PiP window -->
+    <div id="pip-container" style="display: none;">
+        <p id="music-text">Loading...</p>
+    </div>
 
-    <!-- Link to your external JavaScript file -->
-    <script src="js/app.js" defer></script> 
+    <script>
+        const openPipButton = document.getElementById('open-pip-button');
+        const pipContainer = document.getElementById('pip-container');
+        const musicDisplay = document.getElementById('music-text');
+
+        // Function to grab the data from the root domain
+        async function updateMusic() {
+            try {
+                const response = await fetch("https://clockwise3000.online/music.txt");
+                if (response.ok) {
+                    const text = await response.text();
+                    musicDisplay.textContent = text;
+                }
+            } catch (err) {
+                console.error("CORS or Fetch error:", err);
+                musicDisplay.textContent = "Error loading music info";
+            }
+        }
+
+        // Start fetching immediately and refresh every 10 seconds
+        updateMusic();
+        setInterval(updateMusic, 1000);
+
+        if ('documentPictureInPicture' in window) {
+            openPipButton.addEventListener('click', async () => {
+                // Request the PiP window
+                const pipWindow = await window.documentPictureInPicture.requestWindow({ 
+                    width: 350, 
+                    height: 120 
+                });
+
+                // Copy styles to the new window
+                [...document.styleSheets].forEach((styleSheet) => {
+                    try {
+                        const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
+                        const style = document.createElement('style');
+                        style.textContent = cssRules;
+                        pipWindow.document.head.appendChild(style);
+                    } catch (e) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = styleSheet.href;
+                        pipWindow.document.head.appendChild(link);
+                    }
+                });
+
+                // Move the container into the PiP window
+                pipWindow.document.body.append(pipContainer);
+                pipContainer.style.display = 'flex';
+
+                // Return it to the main page when PiP closes
+                pipWindow.addEventListener('pagehide', () => {
+                    document.body.append(pipContainer);
+                    pipContainer.style.display = 'none';
+                });
+            });
+        } else {
+            openPipButton.disabled = true;
+            openPipButton.textContent = 'Document PiP API not supported';
+        }
+    </script>
 </body>
 </html>
