@@ -1,21 +1,17 @@
 {
-  "name": "PWA App",
-  "short_name": "TitleBarApp",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "display_override": ["window-controls-overlay"],
-  "theme_color": "#202124",
-  "background_color": "#202124",
-  "icons": [
-    {
-      "src": "https://via.placeholder.com",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://via.placeholder.com",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+	"name": "PWA App",
+	"icons": [
+		{
+			"src": "images/icon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		}
+	],
+	"background_color": "#28346a",
+	"theme_color": "#28346a",
+	"start_url": "./index.html",
+	"orientation": "landscape",
+	"display_override": ["fullscreen", "standalone", "minimal-ui"],
+	"display": "fullscreen"
 }
