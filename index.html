@@ -1,75 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PWA App</title>
-    <link rel="manifest" href="manifest.json">
-    <style>
-        body { margin: 0; font-family: sans-serif; background: #202124; color: white; }
-
-
-        #custom-title-bar {
-            position: fixed;
-            top: env(titlebar-area-y, 0);
-            left: env(titlebar-area-x, 0);
-            width: env(titlebar-area-width, 100%);
-            height: env(titlebar-area-height, 40px);
-            background: #333;
-            display: none; 
-            align-items: center;
-            padding-left: 15px;
-            app-region: drag; 
-        }
-
-
-        @media (display-mode: window-controls-overlay) {
-            #custom-title-bar { display: flex; }
-            main { margin-top: 40px; }
-        }
-
-        main { padding: 20px; text-align: center; }
-        #install-btn { 
-            padding: 10px 20px; font-size: 16px; cursor: pointer; 
-            background: #007bff; color: white; border: none; border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="custom-title-bar">
-        <span>App title</span>
-    </div>
-
-    <main>
-        <h1>PWA App</h1>
-        <button id="install-btn" style="display:none;">Install App</button>
-    </main>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-
-        let deferredPrompt;
-        const installBtn = document.getElementById('install-btn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') installBtn.style.display = 'none';
-                deferredPrompt = null;
-            }
-        });
-    </script>
-    <script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     // Check if the app is running in 'standalone' mode (installed PWA)
     const isPWA = window.matchMedia('(display-mode: standalone)').matches;
@@ -94,5 +23,3 @@
     }
   });
 </script>
-</body>
-</html>
